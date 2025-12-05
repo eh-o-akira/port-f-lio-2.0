@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IgnisLab | Portfólio Criativo</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- 🎆 Efeito de Partículas (Background) -->
+    <div id="particles-js"></div>
+    
+    <!-- 🔬 Laboratório Container -->
+    <div class="lab-container">
+        
+        <!-- 🧭 Navegação Flutuante -->
+        <nav class="lab-nav">
+            <div class="nav-brand">
+                <span class="lab-icon">⚗️</span>
+                <span class="brand-name">IGNIS<span class="brand-accent">LAB</span></span>
+            </div>
+            <div class="nav-actions">
+                <button id="lab-login-btn" class="lab-btn lab-btn-outline">
+                    <i class="fas fa-flask"></i> Acessar Laboratório
+                </button>
+                <button class="lab-btn lab-btn-icon" id="sound-toggle">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- 🚪 Porta do Laboratório (Hero Section) -->
+        <section class="lab-door">
+            <div class="door-frame">
+                <div class="door-label">
+                    <span class="warning-sign">⚠️</span>
+                    <h1>ÁREA DE<br/><span class="text-burning">EXPERIMENTOS</span><br/>CRIATIVOS</h1>
+                    <p class="door-subtitle">Onde o imaginário <span class="text-flicker">se torna real</span></p>
+                </div>
+                
+                <div class="door-controls">
+                    <div class="pressure-gauge">
+                        <div class="gauge">
+                            <div class="gauge-fill" id="creativity-gauge"></div>
+                        </div>
+                        <span>Criatividade: <span id="gauge-value">87%</span></span>
+                    </div>
+                    
+                    <button id="enter-lab-btn" class="lab-btn lab-btn-primary door-handle">
+                        <i class="fas fa-door-open"></i> ABRIR PORTA
+                    </button>
+                    
+                    <div class="lab-temp">
+                        <i class="fas fa-thermometer-half"></i>
+                        <span>Temperatura Criativa: <span class="temp-hot">476°C</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🧪 Experimentos em Destaque -->
+        <section class="experiments-showcase">
+            <h2 class="section-title"><i class="fas fa-vial"></i> TOP PROJETOS ARMAZENADOS</h2>
+            <div class="experiments-grid">
+                <div class="experiment-tube" data-experiment="1">
+                    <div class="tube-liquid liquid-red"></div>
+                    <div class="tube-label">UI/UX Design</div>
+                    <div class="bubbles"></div>
+                </div>
+                <div class="experiment-tube" data-experiment="2">
+                    <div class="tube-liquid liquid-orange"></div>
+                    <div class="tube-label">Desenvolvimento Web</div>
+                    <div class="bubbles"></div>
+                </div>
+                <div class="experiment-tube" data-experiment="3">
+                    <div class="tube-liquid liquid-yellow"></div>
+                    <div class="tube-label">Animações</div>
+                    <div class="bubbles"></div>
+                </div>
+                <div class="experiment-tube" data-experiment="4">
+                    <div class="tube-liquid liquid-blue"></div>
+                    <div class="tube-label">Design</div>
+                    <div class="bubbles"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🔥 Processo Criativo -->
+        <section class="creative-process">
+            <h2 class="section-title"><i class="fas fa-fire"></i> COMO AS IDEIAS INCENDIAM</h2>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number step-burning">01</div>
+                    <h3>Concepção</h3>
+                    <p>A faísca inicial que acende o processo criativo</p>
+                    <div class="step-spark"></div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number step-heating">02</div>
+                    <h3>Experimentação</h3>
+                    <p>Testando combinações e observando reações</p>
+                    <div class="step-bubble"></div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number step-melting">03</div>
+                    <h3>Fusão</h3>
+                    <p>Tecnologia e design se fundem em alta temperatura</p>
+                    <div class="step-melt"></div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number step-crystal">04</div>
+                    <h3>Cristalização</h3>
+                    <p>O projeto solidifica-se em sua forma final</p>
+                    <div class="step-crystal"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 📊 Laboratório de Dados -->
+        <section class="data-lab">
+            <div class="data-terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span class="terminal-title">terminal@ignislab:~</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line"><span class="prompt">$</span> cat projetos_ativos.txt</div>
+                    <div class="terminal-line"><span class="output">>> [Web Apps: 12] [Mobile: 8] [UI Designs: 24]</span></div>
+                    <div class="terminal-line"><span class="prompt">$</span> cat tecnologias.txt</div>
+                    <div class="terminal-line"><span class="output">>> React, Vue, Firebase, Node.js, Three.js</span></div>
+                    <div class="terminal-line"><span class="prompt">$</span> <span class="cursor">█</span></div>
+                </div>
+            </div>
+            
+            <div class="data-cta">
+                <h3>PRONTO PARA EXPERIMENTAR?</h3>
+                <p>Acesse o laboratório completo para ver todos os projetos e criar os seus</p>
+                <button id="cta-login" class="lab-btn lab-btn-fire">
+                    <i class="fas fa-fire"></i> ACESSAR LAB COMPLETO
+                </button>
+            </div>
+        </section>
+
+        <!-- 👣 Rodapé do Laboratório -->
+        <footer class="lab-footer">
+            <div class="footer-content">
+                <div class="lab-creds">
+                    <span class="lab-icon">⚗️</span>
+                    <span class="brand-name">IGNIS<span class="brand-accent">LAB</span></span>
+                    <p>Laboratório de criação digital</p>
+                </div>
+                <div class="lab-social">
+                    <div class="social-tube">
+                        <div class="social-liquid"></div>
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <div class="social-tube">
+                        <div class="social-liquid"></div>
+                        <i class="fab fa-linkedin"></i>
+                    </div>
+                    <div class="social-tube">
+                        <div class="social-liquid"></div>
+                        <i class="fab fa-codepen"></i>
+                    </div>
+                </div>
+                <div class="lab-warning">
+                    <p><i class="fas fa-exclamation-triangle"></i> AVISO: A exposição prolongada pode resultar em surtos criativos.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 🔐 MODAL DE LOGIN (Laboratório Seguro) -->
+    <div id="lab-login-modal" class="lab-modal">
+        <div class="lab-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-fingerprint"></i> ACESSO AO LABORATÓRIO</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="access-methods">
+                    <div class="access-tube">
+                        <div class="tube-content">
+                            <i class="fab fa-google"></i>
+                            <h3>Acesso Rápido</h3>
+                            <p>Use sua conta Google para entrar instantaneamente</p>
+                            <button id="modal-google" class="lab-btn lab-btn-outline">
+                                <i class="fab fa-google"></i> Google
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="access-divider">
+                        <span>OU</span>
+                    </div>
+                    
+                    <div class="access-tube">
+                        <div class="tube-content">
+                            <i class="fas fa-flask"></i>
+                            <h3>Credenciais do Lab</h3>
+                            <input type="email" id="modal-email" placeholder="email@laboratorio.com" class="lab-input">
+                            <input type="password" id="modal-password" placeholder="••••••••" class="lab-input">
+                            <input type="text" id="modal-name" placeholder="Seu nome (novos acessos)" class="lab-input" style="display: none;">
+                            
+                            <button id="modal-email-btn" class="lab-btn lab-btn-primary">
+                                <i class="fas fa-door-open"></i> Entrar
+                            </button>
+                            <button id="modal-toggle-register" class="lab-btn lab-btn-text">
+                                Criar nova conta no lab
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-warning">
+                    <p><i class="fas fa-shield-alt"></i> Seu acesso está protegido com criptografia de nível laboratorial</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎵 Áudio Ambiente (opcional) -->
+    <audio id="lab-ambient" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-science-lab-ambience-309.mp3" type="audio/mpeg">
+    </audio>
+
+   <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<!-- Primeiro: Efeitos visuais -->
+<script src="lab-effects.js"></script>
+
+<!-- Depois: Autenticação (AGORA FUNCIONANDO) -->
+<script src="script.js"></script>
+
+</body>
+
+</html>
