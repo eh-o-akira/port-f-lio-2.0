@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IgnisLab | Meu Laboratório</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <meta name="description" content="Dashboard do IgnisLab - Gerencie seus projetos criativos">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0a0f">
+    <style>
+        /* Modal Responsivo */
+        .lab-modal-content.modal-small {
+            width: 95%;
+            max-width: 700px;
+            margin: 1.5rem auto;
+            padding: 1.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .lab-modal-content.modal-small {
+                width: 95vw;
+                margin: 1rem auto;
+                padding: 1.2rem;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .form-grid {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .form-group label {
+                font-size: 0.95rem;
+            }
+
+            .lab-input {
+                width: 100%;
+                padding: 0.65rem;
+                font-size: 0.95rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 0.6rem;
+            }
+
+            .form-actions .lab-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Evita zoom em input no iOS */
+        .lab-input {
+            font-size: 16px;
+        }
+
+        /* Modal invisível por padrão mas com classes ativas */
+        .lab-modal,
+        #habilidades-modal {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .lab-modal.active,
+        #habilidades-modal.active {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+
+        .lab-modal-content,
+        .habilidades-modal-content {
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .lab-modal-content.active,
+        .habilidades-modal-content.active {
+            transform: scale(1);
+        }
+
+        /* Estilos para preview de arquivos */
+        .file-preview {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(10, 15, 20, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(144, 238, 144, 0.2);
+        }
+
+        .file-preview-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            margin: 5px 0;
+        }
+
+        .file-preview-item .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-preview-item .file-size {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 🎆 Efeito de Partículas -->
+    <div id="particles-js"></div>
+
+    <!-- 🔬 Dashboard Principal -->
+    <div class="dashboard-container">
+
+        <!-- 🧭 Navegação do Dashboard -->
+        <nav class="dashboard-nav">
+            <div class="nav-brand">
+                <div class="lab-spinner">
+                    <div class="spinner-ring"></div>
+                    <span class="lab-icon">⚗️</span>
+                </div>
+                <span class="brand-name">IGNIS<span class="brand-accent">DASH</span></span>
+                <span class="user-badge" id="user-badge">
+                    <i class="fas fa-user-astronaut"></i>
+                    <span id="user-name">Carregando...</span>
+                </span>
+            </div>
+
+            <div class="nav-controls">
+                <div class="search-lab">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-projects" placeholder="Buscar projetos...">
+                </div>
+
+                <div class="nav-actions">
+                    <button id="theme-toggle" class="lab-btn lab-btn-icon" title="Alternar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+
+                    <button id="notifications-btn" class="lab-btn lab-btn-icon" title="Notificações">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">0</span>
+                    </button>
+
+                    <div class="user-menu">
+                        <button class="user-avatar" id="user-menu-btn">
+                            <img id="user-avatar"
+                                src="https://ui-avatars.com/api/?name=Usuario&background=90ee90&color=fff" alt="Avatar">
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <a href="#profile"><i class="fas fa-user-cog"></i> Meu Perfil</a>
+                            <a href="#settings"><i class="fas fa-cog"></i> Configurações</a>
+                            <div class="dropdown-divider"></div>
+                            <button id="logout-btn" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Sair do Laboratório
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 📊 Painel de Status -->
+        <section class="status-panel">
+            <div class="status-card creative-status">
+                <div class="status-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Nível Criativo</h3>
+                    <div class="status-meter">
+                        <div class="meter-fill" id="creative-meter"></div>
+                        <span class="meter-value" id="creative-value">92%</span>
+                    </div>
+                    <p class="status-desc">Alta capacidade de inovação</p>
+                </div>
+            </div>
+
+            <div class="status-card projects-status">
+                <div class="status-icon">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Projetos Ativos</h3>
+                    <div class="status-count" id="projects-count">0</div>
+                    <p class="status-desc">Experimentos em andamento</p>
+                </div>
+            </div>
+
+            <div class="status-card skills-status">
+                <div class="status-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Habilidades</h3>
+                    <div class="skills-tags" id="skills-tags-container">
+                        <span class="no-skills-placeholder">Nenhuma habilidade</span>
+                    </div>
+                    <p class="status-desc">Adicione suas habilidades</p>
+                    <button id="edit-skills-btn" class="edit-skills-btn" title="Editar habilidades">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="status-card temp-status">
+                <div class="status-icon">
+                    <i class="fas fa-thermometer-half"></i>
+                </div>
+                <div class="status-info">
+                    <h3>Temperatura Lab</h3>
+                    <div class="temp-display">
+                        <span class="temp-value" id="temp-value">42°C</span>
+                        <div class="temp-bar">
+                            <div class="temp-fill"></div>
+                        </div>
+                    </div>
+                    <p class="status-desc">Ambiente propício para criação</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎨 Área Principal de Conteúdo -->
+        <div class="main-content-area">
+            <!-- 📁 Seção de Projetos -->
+            <section class="projects-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-vial"></i> Meus Experimentos</h2>
+                    <div class="section-actions">
+                        <button id="filter-projects" class="lab-btn lab-btn-outline">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                        <button id="export-json" class="lab-btn lab-btn-outline" title="Exportar para JSON">
+                            <i class="fas fa-file-code"></i> JSON
+                        </button>
+                        <button id="export-pdf" class="lab-btn lab-btn-outline" title="Exportar para PDF">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                        <button id="import-projects" class="lab-btn lab-btn-outline" title="Importar projetos">
+                            <i class="fas fa-file-import"></i> Importar
+                        </button>
+                        <button id="add-project" class="lab-btn lab-btn-primary">
+                            <i class="fas fa-plus"></i> Novo Experimento
+                        </button>
+                    </div>
+                </div>
+
+                <div class="projects-filters">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="web">Web</button>
+                    <button class="filter-btn" data-filter="mobile">Mobile</button>
+                    <button class="filter-btn" data-filter="design">Design</button>
+                    <button class="filter-btn" data-filter="prototype">Protótipos</button>
+                    <button class="filter-btn" data-filter="file">Com Arquivos</button>
+                </div>
+
+                <div id="projetos-container" class="projects-grid">
+                    <!-- Projetos serão carregados aqui dinamicamente -->
+                    <div class="empty-state" id="empty-projects">
+                        <div class="empty-icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h3>Laboratório Vazio</h3>
+                        <p>Comece criando seu primeiro experimento!</p>
+                        <button id="create-first-project" class="lab-btn lab-btn-primary">
+                            <i class="fas fa-plus"></i> Criar Primeiro Projeto
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 🛠️ Sidebar de Ferramentas -->
+            <aside class="tools-sidebar">
+                <div class="toolbox">
+                    <h3><i class="fas fa-toolbox"></i> Caixa de Ferramentas</h3>
+
+                    <div class="tool-item">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="tool-info">
+                            <h4>Upload Rápido</h4>
+                            <p>Envie PDFs, JSON, ZIP</p>
+                        </div>
+                        <button class="tool-btn" data-tool="quick-upload">
+                            <i class="fas fa-upload"></i>
+                        </button>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="tool-info">
+                            <h4>Inspiração</h4>
+                            <p>Coleção de referências visuais</p>
+                        </div>
+                        <button class="tool-btn" data-tool="inspiration">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="tool-info">
+                            <h4>Snippets</h4>
+                            <p>Trechos de código reutilizáveis</p>
+                        </div>
+                        <button class="tool-btn" data-tool="snippets">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="tool-info">
+                            <h4>Métricas</h4>
+                            <p>Análise de performance</p>
+                        </div>
+                        <button class="tool-btn" data-tool="metrics">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estatísticas Rápidas -->
+                <div class="quick-stats">
+                    <h3><i class="fas fa-chart-bar"></i> Estatísticas Rápidas</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value" id="total-views">0</span>
+                            <span class="stat-label">Visualizações</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="completed-projects">0</span>
+                            <span class="stat-label">Concluídos</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="in-progress">0</span>
+                            <span class="stat-label">Em Andamento</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="files-count">0</span>
+                            <span class="stat-label">Arquivos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atividade Recente -->
+                <div class="recent-activity">
+                    <h3><i class="fas fa-history"></i> Atividade Recente</h3>
+                    <div class="activity-list">
+                        <div class="empty-activity">
+                            <div class="activity-icon info">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>Nenhuma atividade recente</p>
+                                <span class="activity-time">Comece a usar o dashboard</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- 📝 Modal de Criar/Editar Projeto (AGORA COM UPLOAD) -->
+        <div id="modal-add" class="lab-modal">
+            <div class="lab-modal-content modal-small">
+                <div class="modal-header">
+                    <h2><i class="fas fa-vial"></i> <span id="modal-title">Novo Experimento</span></h2>
+                    <button class="modal-close" id="close-project-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-projeto">
+                        <div class="form-group">
+                            <label for="titulo">
+                                <i class="fas fa-heading"></i> Título do Experimento *
+                            </label>
+                            <input type="text" id="titulo" placeholder="Ex: Ignis Dashboard v2.0" required
+                                class="lab-input">
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="categoria">
+                                    <i class="fas fa-tag"></i> Categoria
+                                </label>
+                                <select id="categoria" class="lab-input">
+                                    <option value="web">Web</option>
+                                    <option value="mobile">Mobile</option>
+                                    <option value="design">Design</option>
+                                    <option value="prototype">Protótipo</option>
+                                    <option value="experiment">Experimento</option>
+                                    <option value="cad">CAD/AutoCAD</option>
+                                    <option value="document">Documento</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status">
+                                    <i class="fas fa-tasks"></i> Status
+                                </label>
+                                <select id="status" class="lab-input">
+                                    <option value="planning">Planejamento</option>
+                                    <option value="development">Em Desenvolvimento</option>
+                                    <option value="testing">Testes</option>
+                                    <option value="completed">Concluído</option>
+                                    <option value="paused">Pausado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 📁 ÁREA DE UPLOAD DE ARQUIVOS -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-paperclip"></i> Anexar Arquivos (PDF, JSON, ZIP, DWG, etc.)
+                            </label>
+                            <div class="drop-zone" id="drop-zone">
+                                <div class="drop-zone-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <p>Arraste e solte arquivos aqui ou clique para selecionar</p>
+                                <div class="file-types">
+                                    <span class="file-type-badge">PDF</span>
+                                    <span class="file-type-badge">JSON</span>
+                                    <span class="file-type-badge">ZIP</span>
+                                    <span class="file-type-badge">DWG</span>
+                                    <span class="file-type-badge">Imagens</span>
+                                </div>
+                                <label class="custom-file-upload">
+                                    <input type="file" id="file-upload" multiple 
+                                        accept=".pdf,.json,.zip,.dwg,.dxf,.jpg,.jpeg,.png,.gif">
+                                    <i class="fas fa-folder-open"></i> Selecionar Arquivos
+                                </label>
+                            </div>
+                            <div id="file-preview" class="file-preview">
+                                <!-- Arquivos selecionados aparecerão aqui -->
+                            </div>
+                            <div id="upload-progress" class="upload-progress" style="display: none;">
+                                <div class="upload-progress-bar" id="upload-progress-bar"></div>
+                            </div>
+                            <small class="form-hint">Máximo 10MB por arquivo. ZIPs serão extraídos automaticamente.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tecnologias">
+                                <i class="fas fa-code"></i> Tecnologias Utilizadas
+                            </label>
+                            <div class="tags-input" id="tags-container">
+                                <span class="tags-placeholder">Nenhuma tecnologia adicionada</span>
+                            </div>
+                            <input type="text" id="tecnologias-input"
+                                placeholder="Digite uma tecnologia e pressione Enter" class="lab-input">
+                            <small class="form-hint">Ex: React, Firebase, Figma, Node.js</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricao">
+                                <i class="fas fa-align-left"></i> Descrição
+                            </label>
+                            <textarea id="descricao"
+                                placeholder="Descreva seu experimento, tecnologias usadas, desafios superados..."
+                                rows="3" class="lab-input"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="link">
+                                <i class="fas fa-link"></i> URL do Projeto (opcional)
+                            </label>
+                            <input type="url" id="link" placeholder="https://exemplo.com/projeto" class="lab-input">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="lab-btn lab-btn-outline" id="cancel-project-btn">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                            <button type="submit" class="lab-btn lab-btn-primary" id="save-project-btn">
+                                <i class="fas fa-save"></i> Salvar Experimento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🧠 Modal de Habilidades (CORRIGIDO) -->
+        <div id="habilidades-modal" class="lab-modal">
+            <div class="lab-modal-content habilidades-modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-tools"></i> Minhas Habilidades</h2>
+                    <button class="modal-close" id="close-habilidades-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="habilidades-list">
+                        <p class="modal-instruction">Adicione suas habilidades abaixo:</p>
+                        <div class="selected-habilidades" id="selected-habilidades">
+                            <span class="no-skills-message">Nenhuma habilidade adicionada ainda</span>
+                        </div>
+                        <div class="habilidades-input">
+                            <input type="text" id="nova-habilidade" placeholder="Ex: React, Figma, AutoCAD" class="lab-input">
+                            <button id="add-habilidade-btn" class="lab-btn lab-btn-outline">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
+                        </div>
+                        <div class="habilidades-suggestions">
+                            <h4>Sugestões rápidas:</h4>
+                            <div class="suggestions-grid" id="suggestions-grid">
+                                <!-- Sugestões serão preenchidas via JavaScript -->
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="lab-btn lab-btn-primary" id="save-skills-btn">
+                                <i class="fas fa-save"></i> Salvar Habilidades
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📁 Modal de Importação -->
+        <div id="import-modal" class="lab-modal">
+            <div class="lab-modal-content modal-small">
+                <div class="modal-header">
+                    <h2><i class="fas fa-file-import"></i> Importar Projetos</h2>
+                    <button class="modal-close" id="close-import-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="import-export-section">
+                        <h4>Escolha o formato de importação:</h4>
+                        <div class="import-export-buttons">
+                            <button id="import-json" class="lab-btn lab-btn-outline">
+                                <i class="fas fa-file-code"></i> Importar JSON
+                            </button>
+                            <button id="import-zip" class="lab-btn lab-btn-outline">
+                                <i class="fas fa-file-archive"></i> Importar ZIP
+                            </button>
+                            <button id="import-pdf" class="lab-btn lab-btn-outline">
+                                <i class="fas fa-file-pdf"></i> Extrair de PDF
+                            </button>
+                        </div>
+                        <div class="drop-zone" id="import-drop-zone">
+                            <div class="drop-zone-icon">
+                                <i class="fas fa-file-import"></i>
+                            </div>
+                            <p>Arraste e solte arquivos aqui para importação em lote</p>
+                            <small class="form-hint">Suporta: .json, .zip, .pdf</small>
+                        </div>
+                        <div id="import-preview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👣 Rodapé do Dashboard -->
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>IgnisLab Dashboard</h4>
+                    <p>v2.1.0 | Status: <span class="system-status online">Operacional</span></p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Recursos</h4>
+                    <a href="#docs">Documentação</a>
+                    <a href="#api">API do Lab</a>
+                    <a href="#support">Suporte</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Conecte-se</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-codepen"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <div class="system-info">
+                        <p><i class="fas fa-server"></i> Sistema: <span id="system-load">32%</span></p>
+                        <p><i class="fas fa-database"></i> Armazenamento: <span id="storage-used">1.2/10GB</span></p>
+                        <p><i class="fas fa-shield-alt"></i> Segurança: <span class="secure">Protegido</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2024 IgnisLab. Todos os experimentos protegidos por patente criativa.</p>
+                <p class="footer-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Manuseie com cuidado: criatividade em alta voltagem
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+    <script src="home.js"></script>
+</body>
+
+</html>
